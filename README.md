@@ -10,7 +10,7 @@ https://youtu.be/X6PjfhcNE98
 - very fast rendering even on atmega Arduino
 - no bitmap data is necessary - only rendering routines
 - each number can have different width, height and segment thickness
-- should work with any Arduino graphic library with used defined callbacks for drawLine() and fillRect()
+- should work with any Arduino graphic library with user defined callbacks for drawLine() and fillRect()
 - 3 styles of 7-segment font variation
 - extra pseudo 3D look for color displays (style 2c)
 - simple fast rectangular and outline styles
