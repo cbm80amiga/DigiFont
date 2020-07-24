@@ -3,6 +3,7 @@ DigiFont	KEYWORD3
 init	KEYWORD2
 setColors	KEYWORD2
 setSpacing	KEYWORD2
+setClearBg	KEYWORD2
 getWidth	KEYWORD2
 getHeight	KEYWORD2
 drawSeg1	KEYWORD2

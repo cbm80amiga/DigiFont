@@ -4,8 +4,6 @@
 #ifndef _DIGI_FONT_H
 #define _DIGI_FONT_H 
 
-#include <Arduino.h>
-
 // ---------------------------------
 class DigiFont {
 public:
@@ -38,11 +36,13 @@ public:
   int printNumber3(char *txt, int x, int y);
   int printNumber4(char *txt, int x, int y);
   int printNumber5(char *txt, int x, int y);
+  void clear45(int ch, int x, int y);
 
   // common for all styles
   void setSegment(int wd, int ht, int th);
-  void setSpacing(uint8_t sp) { spacing = sp; }
-  void setColors(int c1, int c0) { colOn=c1; colOff=c0; }
+  void setSpacing(int sp) { spacing = sp; }
+  void setClearBg(int cl) { clearBg = cl; }
+  void setColors(int c1, int c0) { colOn=colOn2=c1; colOff=c0; }
   void setColors(int c1, int c2, int c0) { colOn=c1; colOn2=c2; colOff=c0; }
   int getWidth() { return digWd; }
   int getHeight() { return digHt; }
@@ -59,6 +59,7 @@ public:
   int segThick;
   int colOn,colOn2,colOff;
   int spacing;
+  int clearBg;
 };
 #endif
 
