@@ -1,5 +1,5 @@
 # DigiFont
-Library for nice, scalable digit rendering using any Arduino GFX libraries 
+Library for nice, scalable digits rendering using any Arduino GFX libraries 
 
 YouTube video:
 
