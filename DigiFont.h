@@ -19,23 +19,27 @@ public:
   void drawSeg2(int seg, int x, int y, int c);
   void drawSeg2c(int seg, int x, int y, int c);
   void drawSeg3(int seg, int x, int y, int c);
+  void drawSeg7(int seg, int x, int y, int c);
   void setSize1(int wd, int ht, int th);
   void setSize2(int wd, int ht, int th);
   void setSize3(int wd, int ht, int th);
   void setSize4(int wd, int ht, int th);
   void setSize5(int wd, int ht, int th);
+  void setSize7(int wd, int ht, int th, int st);
   int drawDigit1(int ch, int x, int y);
   int drawDigit2(int ch, int x, int y);
   int drawDigit2c(int ch, int x, int y);
   int drawDigit3(int ch, int x, int y);
   int drawDigit4(int ch, int x, int y);
   int drawDigit5(int ch, int x, int y);
+  int drawDigit7(int ch, int x, int y);
   int printNumber1(char *txt, int x, int y);
   int printNumber2(char *txt, int x, int y);
   int printNumber2c(char *txt, int x, int y);
   int printNumber3(char *txt, int x, int y);
   int printNumber4(char *txt, int x, int y);
   int printNumber5(char *txt, int x, int y);
+  int printNumber7(char *txt, int x, int y);
   void clear45(int ch, int x, int y);
 
   // common for all styles
@@ -54,9 +58,10 @@ public:
   void (*linevFun)(int x, int y0,int y1, int c);
   void (*rectFun)(int x, int y,int w, int h, int c);
 
+  static unsigned char digits[16];
   int digWd, digHt;
   int segWd, segHt;
-  int segThick;
+  int segThick, segSt;
   int colOn,colOn2,colOff;
   int spacing;
   int clearBg;

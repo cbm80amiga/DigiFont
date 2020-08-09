@@ -35,6 +35,7 @@ void DigiFont::setSize1(int wd, int ht, int th)
   //Serial.print(segWd); Serial.print("x"); Serial.println(segHt);
 }
 
+// segThick should be an odd value for the best look
 void DigiFont::setSize2(int wd, int ht, int th)
 {
   digWd = wd;
@@ -57,6 +58,7 @@ void DigiFont::setSize3(int wd, int ht, int th)
   //Serial.print(segWd); Serial.print("x"); Serial.println(segHt);
 }
 
+// rectangular style
 void DigiFont::setSize4(int wd, int ht, int th)
 {
   digWd = wd;
@@ -67,6 +69,7 @@ void DigiFont::setSize4(int wd, int ht, int th)
   //Serial.print(segWd); Serial.print("x"); Serial.println(segHt);
 }
 
+// outline style
 void DigiFont::setSize5(int wd, int ht, int th)
 {
   digWd = wd;
@@ -75,6 +78,20 @@ void DigiFont::setSize5(int wd, int ht, int th)
   segWd = wd;
   segHt = (ht-th*3)/2;
   //Serial.print(segWd); Serial.print("x"); Serial.println(segHt);
+}
+
+// Style #7 can replace styles #1 and #2
+// segThick value should be an odd value for the best look
+// segSt should be from 0 to int(segThick/2) for the best results
+// example for segThick=7 valid segSt is 0,1,2,3
+void DigiFont::setSize7(int wd, int ht, int th, int st)
+{
+  digWd = wd;
+  digHt = ht;
+  segThick = th;
+  segSt = st;
+  segWd = wd-(segSt+1)*2;
+  segHt = (ht-segSt*2-3)/2;
 }
 
 void DigiFont::setSegment(int wd, int ht, int th)
@@ -171,6 +188,32 @@ void DigiFont::drawSeg3(int seg, int x, int y, int c)
   }
 }
 
+void DigiFont::drawSeg7(int seg, int x, int y, int c)
+{
+  if(!c && !clearBg) return;
+  int i,ofs=segThick/2;
+  switch(seg) {
+    case 0: // top
+      for(i=0;i<segThick;i++) (*linehFun)(x+(i<segSt?segSt-i:i-segSt),x+segWd-1-(i<segSt?segSt-i:i-segSt), y+i, c ? colOn : colOff);
+      break;
+    case 3: // bottom
+      for(i=0;i<segThick;i++) (*linehFun)(x+(i<segSt?segSt-i:i-segSt),x+segWd-1-(i<segSt?segSt-i:i-segSt), y+segThick-1-i, c ? colOn : colOff);
+      break;
+    case 6: // middle
+      for(i=0;i<ofs+1;i++) (*linehFun)(x+i,x+segWd-1-i, y-i, c ? colOn : colOff);
+      for(i=1;i<ofs+1;i++) (*linehFun)(x+i,x+segWd-1-i, y+i, c ? colOn : colOff);
+      break;
+    case 1: // right
+    case 2: // right
+      for(i=0;i<segThick;i++) (*linevFun)(x+segThick-1-i,y+(i<segSt?segSt-i:i-segSt),y+segHt-1-(i<segSt?segSt-i:i-segSt), c ? colOn : colOff);
+      break;
+    case 4: // left
+    case 5: // left
+      for(i=0;i<segThick;i++) (*linevFun)(x+i,y+(i<segSt?segSt-i:i-segSt),y+segHt-1-(i<segSt?segSt-i:i-segSt), c ? colOn : colOff);
+      break;
+  }
+}
+
 /*
  Segment bits:
    00
@@ -182,8 +225,11 @@ void DigiFont::drawSeg3(int seg, int x, int y, int c)
    33
 */
 
-static unsigned char digits[10]={
-  0b0111111, 0b0000110, 0b1011011, 0b1001111, 0b1100110, 0b1101101, 0b1111101, 0b0000111, 0b1111111, 0b1101111};
+// 0123456789AbCdEF
+unsigned char DigiFont::digits[16]={
+  0b0111111, 0b0000110, 0b1011011, 0b1001111, 0b1100110, 0b1101101, 0b1111101, 0b0000111, 0b1111111, 0b1101111,
+  0b1110111, 0b1111100, 0b0111001, 0b1011110, 0b1111001, 0b1110001
+};
 
 int DigiFont::drawDigit1(int ch, int x, int y)
 {
@@ -202,7 +248,7 @@ int DigiFont::drawDigit1(int ch, int x, int y)
     case '-':
       s=0b1000000; break;
     default:
-      s=digits[ch&0xf];
+      s=digits[ch&0x1f];
   }
   drawSeg1(0,x+1,               y+0,                       s&0b0000001);
   drawSeg1(1,x+segWd+2-segThick,y+1,                       s&0b0000010);
@@ -231,7 +277,7 @@ int DigiFont::drawDigit2(int ch, int x, int y)
     case '-':
       s=0b1000000; break;
     default:
-      s=digits[ch&0xf];
+      s=digits[ch&0x1f];
   }
   drawSeg2(0,x+ofs,     y+0,            s&0b0000001);
   drawSeg2(1,x+segWd+1, y+ofs,          s&0b0000010);
@@ -262,7 +308,7 @@ int DigiFont::drawDigit2c(int ch, int x, int y)
     case '-':
       s=0b1000000; break;
     default:
-      s=digits[ch&0xf];
+      s=digits[ch&0x0f];
   }
   drawSeg2c(0,x+ofs,     y+0,            s&0b0000001);
   drawSeg2c(1,x+segWd+1, y+ofs,          s&0b0000010);
@@ -309,6 +355,34 @@ int DigiFont::drawDigit3(int ch, int x, int y)
   drawSeg3(4,x+0,                y+digHt-1-ofs-segHt, s&0b0010000);
   drawSeg3(5,x+0,                y+ofs,               s&0b0100000);
   drawSeg3(6,x+segThick+1,       y+(digHt-segThick)/2,s&0b1000000);
+  return digWd; 
+}
+
+int DigiFont::drawDigit7(int ch, int x, int y)
+{
+  int s,offs=segSt+1;
+  switch(ch) {
+    case '.':
+      (*rectFun)(x,y+segHt+segHt+offs-segThick+segSt+2,segThick,segThick,colOn);
+      return segThick;
+    case ':':
+      (*rectFun)(x,y+      offs+1+(segHt-segThick)/2,segThick,segThick,colOn);
+      (*rectFun)(x,y+segHt+offs+1+(segHt-segThick)/2,segThick,segThick,colOn);
+      return segThick; 
+    case ' ':
+      s=0; break;
+    case '-':
+      s=0b1000000; break;
+    default:
+      s=digits[ch&0xf];
+  }
+  drawSeg7(0,x+offs,           y,                  s&0b0000001);
+  drawSeg7(1,x+digWd-segThick, y+offs,          s&0b0000010);
+  drawSeg7(2,x+digWd-segThick, y+offs+segHt+1,  s&0b0000100);
+  drawSeg7(3,x+offs,           y+segHt+segHt+offs-segThick+segSt+2,  s&0b0001000);
+  drawSeg7(4,x,                y+offs+segHt+1,        s&0b0010000);
+  drawSeg7(5,x,                y+offs,                s&0b0100000);
+  drawSeg7(6,x+offs,           y+segHt+offs,        s&0b1000000);
   return digWd; 
 }
 
@@ -626,6 +700,12 @@ int DigiFont::printNumber4(char *txt, int x, int y)
 int DigiFont::printNumber5(char *txt, int x, int y)
 {
   while(*txt) x+=drawDigit5(*txt++,x,y)+spacing;
+  return x-spacing;
+}
+
+int DigiFont::printNumber7(char *txt, int x, int y)
+{
+  while(*txt) x+=drawDigit7(*txt++,x,y)+spacing;
   return x-spacing;
 }
 
