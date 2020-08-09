@@ -19,6 +19,7 @@ https://youtu.be/X6PjfhcNE98
 - each style has separate methods/functions to save program memory
 - if necessary only 3-4 functions can be used separately (setSize,drawSeg,drawDigit,printNumber) without the library
 - special look - multi layer rendering is possible: https://youtu.be/OPq9aBJP-pc
+- new 7-segment style #7 where look of segment can be defined using extra parameter (can replace styles #1 and #2)
 
 If you find it useful and want to buy me a coffee or a beer:
 
