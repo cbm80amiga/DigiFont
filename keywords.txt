@@ -6,6 +6,7 @@ setSpacing	KEYWORD2
 setClearBg	KEYWORD2
 getWidth	KEYWORD2
 getHeight	KEYWORD2
+numberWidth	KEYWORD2
 drawSeg1	KEYWORD2
 drawSeg2	KEYWORD2
 drawSeg2c	KEYWORD2

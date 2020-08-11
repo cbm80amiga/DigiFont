@@ -248,7 +248,7 @@ int DigiFont::drawDigit1(int ch, int x, int y)
     case '-':
       s=0b1000000; break;
     default:
-      s=digits[ch&0x1f];
+      s=digits[ch&0xf];
   }
   drawSeg1(0,x+1,               y+0,                       s&0b0000001);
   drawSeg1(1,x+segWd+2-segThick,y+1,                       s&0b0000010);
@@ -277,7 +277,7 @@ int DigiFont::drawDigit2(int ch, int x, int y)
     case '-':
       s=0b1000000; break;
     default:
-      s=digits[ch&0x1f];
+      s=digits[ch&0xf];
   }
   drawSeg2(0,x+ofs,     y+0,            s&0b0000001);
   drawSeg2(1,x+segWd+1, y+ofs,          s&0b0000010);
@@ -308,7 +308,7 @@ int DigiFont::drawDigit2c(int ch, int x, int y)
     case '-':
       s=0b1000000; break;
     default:
-      s=digits[ch&0x0f];
+      s=digits[ch&0xf];
   }
   drawSeg2c(0,x+ofs,     y+0,            s&0b0000001);
   drawSeg2c(1,x+segWd+1, y+ofs,          s&0b0000010);

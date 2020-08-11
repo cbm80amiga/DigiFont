@@ -3,6 +3,7 @@
 // (c) 2020 Pawel A. Hernik
 // YouTube videos:
 // https://youtu.be/X6PjfhcNE98
+// https://youtu.be/Z_YCfJZn_bA
 
 /*
   HX1230 96x68 LCD connections (header on bottom, from left):
