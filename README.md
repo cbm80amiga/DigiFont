@@ -1,9 +1,11 @@
 # DigiFont
 Library for nice, scalable digits rendering using any Arduino GFX libraries 
 
-YouTube video:
+YouTube videos:
 
 https://youtu.be/X6PjfhcNE98
+
+https://youtu.be/Z_YCfJZn_bA
 
 
 ## Features
