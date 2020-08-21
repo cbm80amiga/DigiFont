@@ -31,15 +31,15 @@ https://youtu.be/Z_YCfJZn_bA
 - style 4 and 5 are renamed to F (filled) and O (outline) but old names left for compatibility
 
 ## Program memory usage
-|Style|Usage|
-|--|--|
-|style 1|1576|
-|style 2|1398|
-|style 2c|1628|
-|style 3|1228|
-|style 4/F|3060|
-|style 5/O|5266|
-|style 7|1838|
+|Style|Usage|Info|
+|--|--|--|
+|style 1|1576||
+|style 2|1398||
+|style 2c|1628|2 color version for pseudo 3D look|
+|style 3|1228|simple rectangle segments for low memory applications|
+|style 4/F|3060|filled|
+|style 5/O|5266|outline|
+|style 7|1838|versatile replacement for style 1 and 2/2c|
 
 If you find it useful and want to buy me a coffee or a beer:
 
