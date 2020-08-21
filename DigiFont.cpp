@@ -59,7 +59,7 @@ void DigiFont::setSize3(int wd, int ht, int th)
 }
 
 // rectangular style
-void DigiFont::setSize4(int wd, int ht, int th)
+void DigiFont::setSizeF(int wd, int ht, int th)
 {
   digWd = wd;
   digHt = ht;
@@ -70,7 +70,7 @@ void DigiFont::setSize4(int wd, int ht, int th)
 }
 
 // outline style
-void DigiFont::setSize5(int wd, int ht, int th)
+void DigiFont::setSizeO(int wd, int ht, int th)
 {
   digWd = wd;
   digHt = ht;
@@ -194,22 +194,22 @@ void DigiFont::drawSeg7(int seg, int x, int y, int c)
   int i,ofs=segThick/2;
   switch(seg) {
     case 0: // top
-      for(i=0;i<segThick;i++) (*linehFun)(x+(i<segSt?segSt-i:i-segSt),x+segWd-1-(i<segSt?segSt-i:i-segSt), y+i, c ? colOn : colOff);
+      for(i=0;i<segThick;i++) (*linehFun)(x+(i<segSt?segSt-i:i-segSt),x+segWd-1-(i<segSt?segSt-i:i-segSt), y+i, c ? (i<=segSt?colOn:colOn2) : colOff);
       break;
     case 3: // bottom
-      for(i=0;i<segThick;i++) (*linehFun)(x+(i<segSt?segSt-i:i-segSt),x+segWd-1-(i<segSt?segSt-i:i-segSt), y+segThick-1-i, c ? colOn : colOff);
+      for(i=0;i<segThick;i++) (*linehFun)(x+(i<segSt?segSt-i:i-segSt),x+segWd-1-(i<segSt?segSt-i:i-segSt), y+segThick-1-i, c ? (i<segSt?colOn2:colOn) : colOff);
       break;
     case 6: // middle
       for(i=0;i<ofs+1;i++) (*linehFun)(x+i,x+segWd-1-i, y-i, c ? colOn : colOff);
-      for(i=1;i<ofs+1;i++) (*linehFun)(x+i,x+segWd-1-i, y+i, c ? colOn : colOff);
+      for(i=1;i<ofs+1;i++) (*linehFun)(x+i,x+segWd-1-i, y+i, c ? colOn2 : colOff);
       break;
     case 1: // right
     case 2: // right
-      for(i=0;i<segThick;i++) (*linevFun)(x+segThick-1-i,y+(i<segSt?segSt-i:i-segSt),y+segHt-1-(i<segSt?segSt-i:i-segSt), c ? colOn : colOff);
+      for(i=0;i<segThick;i++) (*linevFun)(x+segThick-1-i,y+(i<segSt?segSt-i:i-segSt),y+segHt-1-(i<segSt?segSt-i:i-segSt), c ? (i<segSt?colOn2:colOn) : colOff);
       break;
     case 4: // left
     case 5: // left
-      for(i=0;i<segThick;i++) (*linevFun)(x+i,y+(i<segSt?segSt-i:i-segSt),y+segHt-1-(i<segSt?segSt-i:i-segSt), c ? colOn : colOff);
+      for(i=0;i<segThick;i++) (*linevFun)(x+i,y+(i<segSt?segSt-i:i-segSt),y+segHt-1-(i<segSt?segSt-i:i-segSt), c ? (i<=segSt?colOn:colOn2) : colOff);
       break;
   }
 }
@@ -438,7 +438,7 @@ void DigiFont::clear45(int ch, int x, int y)
   }
 }
 
-int DigiFont::drawDigit4(int ch, int x, int y)
+int DigiFont::drawDigitF(int ch, int x, int y)
 {
   int hc=(digHt-segThick*3)/2;
   ch = ch>='0' && ch<='9' ? ch-'0' : ch;
@@ -532,7 +532,7 @@ void DigiFont::rect(int x, int y, int w, int h, int col)
   (*linevFun)(x+w-1,y+1, y+h-2,col);
 }
 
-int DigiFont::drawDigit5(int ch, int x, int y)
+int DigiFont::drawDigitO(int ch, int x, int y)
 {
   int hc=(digHt-segThick*3)/2;
   ch = ch>='0' && ch<='9' ? ch-'0' : ch;
@@ -691,15 +691,15 @@ int DigiFont::printNumber3(char *txt, int x, int y)
   return x-spacing;
 }
 
-int DigiFont::printNumber4(char *txt, int x, int y)
+int DigiFont::printNumberF(char *txt, int x, int y)
 {
-  while(*txt) x+=drawDigit4(*txt++,x,y)+spacing;
+  while(*txt) x+=drawDigitF(*txt++,x,y)+spacing;
   return x-spacing;
 }
 
-int DigiFont::printNumber5(char *txt, int x, int y)
+int DigiFont::printNumberO(char *txt, int x, int y)
 {
-  while(*txt) x+=drawDigit5(*txt++,x,y)+spacing;
+  while(*txt) x+=drawDigitO(*txt++,x,y)+spacing;
   return x-spacing;
 }
 
