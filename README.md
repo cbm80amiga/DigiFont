@@ -21,6 +21,24 @@ https://youtu.be/X6PjfhcNE98
 - special look - multi layer rendering is possible: https://youtu.be/OPq9aBJP-pc
 - new 7-segment style #7 where look of segment can be defined using extra parameter (can replace styles #1 and #2)
 
+## Last changes
+- styles 1 and 2/2c are now obsolete, use them only if you need lower memory usage, use style 7 instead
+- style 7 supports now 2 colors similar to style 2c
+- setSize7(50,100,13,6) is equivalent for setSize2(50,100,13)
+- setSize7(50,100,13,0) is equivalent for setSize1(50,100,13) but setSize7(50,100,13,2) gives nicer look
+- style 4 and 5 are renamed to F (filled) and O (outline) but old names left for compatibility
+
+## Program memory usage
+|Style|Usage|
+|--|--|
+|style 1|1576|
+|style 2|1398|
+|style 2c|1628|
+|style 3|1228|
+|style 4/F|3060|
+|style 5/O|5266|
+|style 7|1838|
+
 If you find it useful and want to buy me a coffee or a beer:
 
 https://www.paypal.me/cbm80amiga
