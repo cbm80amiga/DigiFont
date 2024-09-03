@@ -32,7 +32,7 @@ https://youtu.be/Z_YCfJZn_bA
 - setSize7(50,100,13,0) is equivalent for setSize1(50,100,13) but setSize7(50,100,13,2) gives nicer look
 - style 4 and 5 are renamed to F (filled) and O (outline) but old names left for compatibility
 
-## Program memory usage
+## Program memory usage and examples
 |Style|Usage|Info|Example|
 |--|--|--|--|
 |style 1|1576|7-segment style #1|<img src="images/st1.jpg" title="style1" />|
