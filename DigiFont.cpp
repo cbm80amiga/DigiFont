@@ -1,5 +1,5 @@
 // 7-segment and outline digit font rendering library
-// (c) 2020 by Pawel A. Hernik
+// (c) 2020-24 by Pawel A. Hernik
 
 #include "DigiFont.h"
 
@@ -227,8 +227,9 @@ void DigiFont::drawSeg7(int seg, int x, int y, int c)
 
 // 0123456789AbCdEF
 unsigned char DigiFont::digits[16]={
-  0b0111111, 0b0000110, 0b1011011, 0b1001111, 0b1100110, 0b1101101, 0b1111101, 0b0000111, 0b1111111, 0b1101111,
-  0b1110111, 0b1111100, 0b0111001, 0b1011110, 0b1111001, 0b1110001
+  0b0111111, 0b0000110, 0b1011011, 0b1001111, 0b1100110, // 0..4
+  0b1101101, 0b1111101, 0b0000111, 0b1111111, 0b1101111, // 5..9
+  0b1110111, 0b1111100, 0b0111001, 0b1011110, 0b1111001, 0b1110001  // A..F
 };
 
 int DigiFont::drawDigit1(int ch, int x, int y)
@@ -237,6 +238,8 @@ int DigiFont::drawDigit1(int ch, int x, int y)
   switch(ch) {
     case '.':
       (*rectFun)(x,y+segHt+segHt+3-segThick,segThick,segThick,colOn); return segThick;
+    case '\'':
+      (*rectFun)(x,y,segThick,segThick,colOn); return segThick;
     case ':':  
       //(*rectFun)(x,y+1+(segHt-segThick)/2,segThick,segThick,colOn);
       //(*rectFun)(x,y+segHt+2+(segHt-segThick)/2,segThick,segThick,colOn);
@@ -248,6 +251,7 @@ int DigiFont::drawDigit1(int ch, int x, int y)
     case '-':
       s=0b1000000; break;
     default:
+      ch=ch>='A'?ch-'A'+10:ch;
       s=digits[ch&0xf];
   }
   drawSeg1(0,x+1,               y+0,                       s&0b0000001);
@@ -266,6 +270,8 @@ int DigiFont::drawDigit2(int ch, int x, int y)
   switch(ch) {
     case '.':
       (*rectFun)(x,y+segHt+segHt+2,segThick,segThick,colOn); return segThick;
+    case '\'':
+      (*rectFun)(x,y,segThick,segThick,colOn); return segThick;
     case ':':
       //(*rectFun)(x,y+ofs+(segHt-segThick)/2,segThick,segThick,colOn);
       //(*rectFun)(x,y+segHt+1+ofs+(segHt-segThick)/2,segThick,segThick,colOn);
@@ -277,6 +283,7 @@ int DigiFont::drawDigit2(int ch, int x, int y)
     case '-':
       s=0b1000000; break;
     default:
+      ch=ch>='A'?ch-'A'+10:ch;
       s=digits[ch&0xf];
   }
   drawSeg2(0,x+ofs,     y+0,            s&0b0000001);
@@ -297,6 +304,10 @@ int DigiFont::drawDigit2c(int ch, int x, int y)
       (*rectFun)(x,y+segHt+segHt+2,segThick,segThick,colOn);
       (*rectFun)(x,y+segHt+segHt+2+segThick/2,segThick,segThick-segThick/2,colOn2);
       return segThick;
+    case '\'':
+      (*rectFun)(x,y,segThick,segThick/2,colOn);
+      (*rectFun)(x,y+segThick/2,segThick,segThick/2,colOn2);
+      return segThick;
     case ':':
       (*rectFun)(x,y+ofs+(segHt-segThick)/2,segThick,segThick/2,colOn);
       (*rectFun)(x,y+ofs+(segHt-segThick)/2+segThick/2,segThick,segThick-segThick/2,colOn2);
@@ -308,6 +319,7 @@ int DigiFont::drawDigit2c(int ch, int x, int y)
     case '-':
       s=0b1000000; break;
     default:
+      ch=ch>='A'?ch-'A'+10:ch;
       s=digits[ch&0xf];
   }
   drawSeg2c(0,x+ofs,     y+0,            s&0b0000001);
@@ -326,6 +338,8 @@ int DigiFont::drawDigit3(int ch, int x, int y)
   switch(ch) {
     case '.':
       (*rectFun)(x,y+digHt-1-segThick,segThick,segThick,colOn); return segThick;
+    case '\'':
+      (*rectFun)(x,y,segThick,segThick,colOn); return segThick;
     case ':':
       //(*rectFun)(x,y+segThick+(segHt-segThick)/2,segThick,segThick,colOn);
       //(*rectFun)(x,y+segHt+segThick*2+(segHt-segThick)/2,segThick,segThick,colOn);
@@ -337,6 +351,7 @@ int DigiFont::drawDigit3(int ch, int x, int y)
     case '-':
       s=0b1000000; break;
     default:
+      ch=ch>='A'?ch-'A'+10:ch;
       s=digits[ch&0xf];
   }
   /*  
@@ -363,8 +378,9 @@ int DigiFont::drawDigit7(int ch, int x, int y)
   int s,offs=segSt+1;
   switch(ch) {
     case '.':
-      (*rectFun)(x,y+segHt+segHt+offs-segThick+segSt+2,segThick,segThick,colOn);
-      return segThick;
+      (*rectFun)(x,y+segHt+segHt+offs-segThick+segSt+2,segThick,segThick,colOn); return segThick;
+    case '\'':
+      (*rectFun)(x,y,segThick,segThick,colOn); return segThick;
     case ':':
       (*rectFun)(x,y+      offs+1+(segHt-segThick)/2,segThick,segThick,colOn);
       (*rectFun)(x,y+segHt+offs+1+(segHt-segThick)/2,segThick,segThick,colOn);
@@ -374,6 +390,7 @@ int DigiFont::drawDigit7(int ch, int x, int y)
     case '-':
       s=0b1000000; break;
     default:
+      ch=ch>='A'?ch-'A'+10:ch;
       s=digits[ch&0xf];
   }
   drawSeg7(0,x+offs,           y,                  s&0b0000001);
@@ -391,8 +408,7 @@ void DigiFont::clear45(int ch, int x, int y)
   int hc=(digHt-segThick*3)/2;
   switch(ch) {
     case ' ':
-      (*rectFun)(x,y,   digWd,digHt,colOff);
-      break;
+      (*rectFun)(x,y,   digWd,digHt,colOff);  break;
     case '-':
       (*rectFun)(x,y,               digWd,hc+segThick,colOff);
       (*rectFun)(x,y+hc+segThick*2, digWd,digHt-hc-segThick*2,colOff);
@@ -445,8 +461,9 @@ int DigiFont::drawDigitF(int ch, int x, int y)
   if(clearBg) clear45(ch,x,y);
   switch(ch) {
     case '.':
-      (*rectFun)(x,y+digHt-segThick,segThick,segThick,colOn);
-       return segThick;
+      (*rectFun)(x,y+digHt-segThick,segThick,segThick,colOn); return segThick;
+    case '\'':
+      (*rectFun)(x,y,segThick,segThick,colOn); return segThick;
     case ':':
       (*rectFun)(x,y+(digHt/2-segThick)/2+2,segThick,segThick,colOn);
       (*rectFun)(x,y+digHt-1-(digHt/2-segThick)/2-segThick-1,segThick,segThick,colOn);
@@ -550,8 +567,9 @@ int DigiFont::drawDigitO(int ch, int x, int y)
   }
   switch(ch) {
     case '.':
-      rect(x,y+digHt-segThick,segThick,segThick,colOn);
-       return segThick;
+      rect(x,y+digHt-segThick,segThick,segThick,colOn); return segThick;
+    case '\'':
+      rect(x,y,segThick,segThick,colOn); return segThick;
     case ':':
       rect(x,y+(digHt/2-segThick)/2+2,segThick,segThick,colOn);
       rect(x,y+digHt-1-(digHt/2-segThick)/2-segThick-1,segThick,segThick,colOn);
@@ -712,7 +730,7 @@ int DigiFont::printNumber7(char *txt, int x, int y)
 int DigiFont::numberWidth(char *txt)
 {
   int wd=0;
-  while(*txt) { wd+=((*txt=='.' || *txt==':')?segThick:digWd)+spacing; txt++; }
+  while(*txt) { wd+=((*txt=='.' || *txt==':' || *txt=='\'')?segThick:digWd)+spacing; txt++; }
   return wd-spacing;
 }
 

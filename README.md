@@ -1,3 +1,5 @@
+[![license-badge][]][license] ![version]  ![hit-count] [![github-issues][]][issues]
+
 # DigiFont
 Library for nice, scalable digits rendering using any Arduino GFX libraries 
 
@@ -31,16 +33,25 @@ https://youtu.be/Z_YCfJZn_bA
 - style 4 and 5 are renamed to F (filled) and O (outline) but old names left for compatibility
 
 ## Program memory usage
-|Style|Usage|Info|
-|--|--|--|
-|style 1|1576||
-|style 2|1398||
-|style 2c|1628|2 color version for pseudo 3D look|
-|style 3|1228|simple rectangle segments for low memory applications|
-|style 4/F|3060|filled|
-|style 5/O|5266|outline|
-|style 7|1838|versatile replacement for style 1 and 2/2c|
+|Style|Usage|Info|Example|
+|--|--|--|--|
+|style 1|1576|7-segment style #1|<img src="images/st1.jpg" title="style1" />|
+|style 2|1398|7-segment style #2|<img src="images/st2.jpg" title="style2" />|
+|style 2c|1628|2 color version for pseudo 3D look|<img src="images/st2c.jpg" title="style2c" />|
+|style 3|1228|simple rectangle segments for low memory applications|<img src="images/st3.jpg" title="style3" />|
+|style 4/F|3060|filled|<img src="images/st4.jpg" title="style4" />|
+|style 5/O|5266|outline|<img src="images/st5.jpg" title="style5" />|
+|style 7|1838|versatile replacement for style 1 and 2/2c|<img src="images/st7.jpg" title="style7" />|
 
 If you find it useful and want to buy me a coffee or a beer:
 
+https://buycoffee.to/cbm80
+
 https://www.paypal.me/cbm80amiga
+
+[license-badge]: https://img.shields.io/badge/License-GPLv3-blue.svg
+[license]:       https://choosealicense.com/licenses/gpl-3.0/
+[version]:       https://img.shields.io/badge/Version-1.1.0-green.svg
+[hit-count]:     https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fcbm80amiga%2FDigiFont&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false
+[github-issues]: https://img.shields.io/github/issues/cbm80amiga/DigiFont.svg
+[issues]:        https://github.com/cbm80amiga/DigiFont/issues/
