@@ -1,29 +1,60 @@
 // DigiFont library example
 // Demo on ST7789 IPS display
-// (c) 2020 Pawel A. Hernik
+// (c) 2020-24 Pawel A. Hernik
 // YouTube video: https://youtu.be/X6PjfhcNE98
 
 /*
- ST7789 240x240 IPS (without CS pin) connections (only 6 wires required):
-
+ST7789 240x240 1.3" IPS (without CS pin) - only 4+2 wires required:
  #01 GND -> GND
  #02 VCC -> VCC (3.3V only!)
- #03 SCL -> PA5/SCK
- #04 SDA -> PA7/MOSI
- #05 RES -> PA0 or any digital
- #06 DC  -> PA1 or any digital
+ #03 SCL -> D13/SCK
+ #04 SDA -> D11/MOSI
+ #05 RES -> D9 /PA0 or any digital (HW RESET is required to properly initialize LCD without CS)
+ #06 DC  -> D10/PA1 or any digital
  #07 BLK -> NC
+
+ST7789 240x280 1.69" IPS - only 4+2 wires required:
+ #01 GND -> GND
+ #02 VCC -> VCC (3.3V only!)
+ #03 SCL -> D13/SCK
+ #04 SDA -> D11/MOSI
+ #05 RES -> optional
+ #06 DC  -> D10 or any digital
+ #07 CS  -> D9 or any digital
+ #08 BLK -> VCC
+
+ST7789 170x320 1.9" IPS - only 4+2 wires required:
+ #01 GND -> GND
+ #02 VCC -> VCC (3.3V only!)
+ #03 SCL -> D13/SCK
+ #04 SDA -> D11/MOSI
+ #05 RES -> optional
+ #06 DC  -> D10 or any digital
+ #07 CS  -> D9 or any digital
+ #08 BLK -> VCC
+
+ST7789 240x320 2.0" IPS - only 4+2 wires required:
+ #01 GND -> GND
+ #02 VCC -> VCC (3.3V only!)
+ #03 SCL -> D13/SCK
+ #04 SDA -> D11/MOSI
+ #05 RES -> optional
+ #06 DC  -> D10 or any digital
+ #07 CS  -> D9 or any digital
 */
 
+#include <SPI.h>
+#include <Adafruit_GFX.h>
+#include "ST7789_AVR.h"
 
 #define SCR_WD 240
 #define SCR_HT 240
-#include <SPI.h>
-#include <Adafruit_GFX.h>
-#define TFT_DC    10
-#define TFT_RST   9
-#include <Arduino_ST7789_Fast.h>
-Arduino_ST7789 lcd = Arduino_ST7789(TFT_DC, TFT_RST);
+//#define SCR_HT 320
+
+#define TFT_DC   10
+#define TFT_CS    9  // with CS
+#define TFT_RST  -1  // with CS
+ST7789_AVR lcd = ST7789_AVR(TFT_DC, TFT_RST, TFT_CS);
 
 // -----------------
 #include "DigiFont.h"
@@ -37,7 +68,7 @@ DigiFont font(customLineH,customLineV,customRect);
 void setup(void) 
 {
   Serial.begin(9600);
-  lcd.init();
+  lcd.init(SCR_WD,SCR_HT);
   lcd.fillScreen(BLACK);
   font.setColors(RED,RGBto565(40,0,0));
 }

@@ -1,5 +1,5 @@
 // DigiFont library example
-// Digital clock example on ST7789 IPS display
+// Temperature display on ST7789 IPS
 // (c) 2020-24 Pawel A. Hernik
 
 /*
@@ -61,79 +61,52 @@ ST7789_AVR lcd = ST7789_AVR(TFT_DC, TFT_RST, TFT_CS);
 void customLineH(int x0,int x1, int y, int c) { lcd.drawFastHLine(x0,y,x1-x0+1,c); }
 void customLineV(int x, int y0,int y1, int c) { lcd.drawFastVLine(x,y0,y1-y0+1,c); } 
 void customRect(int x, int y,int w,int h, int c) { lcd.fillRect(x,y,w,h,c); } 
-DigiFont font(customLineH,customLineV,customRect);
+DigiFont digi(customLineH,customLineV,customRect);
 // -----------------
 
 void setup(void) 
 {
   Serial.begin(9600);
-  lcd.init();
+  lcd.init(SCR_WD,SCR_HT);
   lcd.fillScreen(BLACK);
 }
 
-unsigned long ms;
+unsigned long ms,demoTime=5000;
+char buf[20];
 
-void demoClock1(int t)
+float readIntTemp() 
 {
-  lcd.fillScreen(BLACK);
-  font.setColors(RED,RGBto565(60,0,0));
-  int w=(SCR_HT-t-10)/4;
-  font.setSize1(w-3,w*2,t);
-  int y=(SCR_HT-w*2)/2;
-  ms=millis();
-  while(millis()-ms<5000) {
-    font.drawDigit1(random(0,3),0*w,y);
-    font.drawDigit1(random(0,4),1*w,y);
-    font.drawDigit1(':',2*w+5-3,y);
-    font.drawDigit1(random(0,6),t+10-3+2*w,y);
-    font.drawDigit1(random(0,10),t+10-3+3*w,y);
-    delay(600);
-  }
+  long result;
+  // Read temperature sensor against 1.1V reference
+  ADMUX = _BV(REFS1) | _BV(REFS0) | _BV(MUX3);
+  delay(2); // Wait for Vref to settle
+  ADCSRA |= _BV(ADSC); // Convert
+  while (bit_is_set(ADCSRA, ADSC));
+  result = ADCL;
+  result |= ADCH << 8;
+  result = (result - 125) * 1075;
+  return result/10000.0;
 }
 
-void demoClock2(int t)
+void show2_1()
 {
+  int w=50,h=90,x=0,y=75,t=13;
   lcd.fillScreen(BLACK);
-  font.setColors(GREEN,RGBto565(0,40,0));
-  int w=(SCR_HT-t-10)/4;
-  font.setSize2(w-3,w*2,t);
-  int y=(SCR_HT-w*2)/2;
+  digi.setColors(RGBto565(250,0,250),RGBto565(200,0,200),RGBto565(40,0,40));
+  digi.setSize7(w-2,h,t,t/2);
+  digi.setSpacing(4);
   ms=millis();
-  while(millis()-ms<5000) {
-    font.drawDigit2(random(0,3),0*w,y);
-    font.drawDigit2(random(0,4),1*w,y);
-    font.drawDigit2(':',2*w+5-3,y);
-    font.drawDigit2(random(0,6),t+10-3+2*w,y);
-    font.drawDigit2(random(0,10),t+10-3+3*w,y);
-    delay(600);
-  }
-}
-
-void demoClock2c(int t)
-{
-  lcd.fillScreen(BLACK);
-  font.setColors(CYAN,RGBto565(0,190,190),RGBto565(0,40,40));
-  int w=(SCR_HT-t-10)/4;
-  font.setSize2(w-3,w*2,t);
-  int y=(SCR_HT-w*2)/2;
-  ms=millis();
-  while(millis()-ms<5000) {
-    font.drawDigit2c(random(0,3),0*w,y);
-    font.drawDigit2c(random(0,4),1*w,y);
-    font.drawDigit2c(':',2*w+5-3,y);
-    font.drawDigit2c(random(0,6),t+10-3+2*w,y);
-    font.drawDigit2c(random(0,10),t+10-3+3*w,y);
-    delay(600);
+  while(millis()-ms<demoTime) {
+    float temp=readIntTemp();
+    dtostrf(temp,2,1,buf);
+    x=digi.printNumber7(buf,x,y);
+    x=digi.printNumber7("'C",x+8,y);
+    delay(300);
   }
 }
 
 void loop() 
 {
-  demoClock1(10);
-  demoClock2(14);
-  demoClock2c(14);
-  demoClock2(10);
-  demoClock2c(10);
+  show2_1();
 }
-
 

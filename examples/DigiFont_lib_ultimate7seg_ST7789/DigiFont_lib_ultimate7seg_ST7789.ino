@@ -1,6 +1,9 @@
 // DigiFont library example
-// Digital clock example on ST7789 IPS display
+// Ultimate 7-segment demo on ST7789
 // (c) 2020-24 Pawel A. Hernik
+// YouTube videos:
+// https://youtu.be/X6PjfhcNE98
+// https://youtu.be/Z_YCfJZn_bA
 
 /*
 ST7789 240x240 1.3" IPS (without CS pin) - only 4+2 wires required:
@@ -61,79 +64,105 @@ ST7789_AVR lcd = ST7789_AVR(TFT_DC, TFT_RST, TFT_CS);
 void customLineH(int x0,int x1, int y, int c) { lcd.drawFastHLine(x0,y,x1-x0+1,c); }
 void customLineV(int x, int y0,int y1, int c) { lcd.drawFastVLine(x,y0,y1-y0+1,c); } 
 void customRect(int x, int y,int w,int h, int c) { lcd.fillRect(x,y,w,h,c); } 
-DigiFont font(customLineH,customLineV,customRect);
+DigiFont digi(customLineH,customLineV,customRect);
 // -----------------
 
 void setup(void) 
 {
   Serial.begin(9600);
-  lcd.init();
+  lcd.init(SCR_WD,SCR_HT);
   lcd.fillScreen(BLACK);
+  lcd.setTextColor(WHITE);
+  lcd.setTextSize(2);
+  digi.setColors(RED,RGBto565(40,0,0));
 }
 
 unsigned long ms;
+char buf[20];
 
-void demoClock1(int t)
+void style7(int st)
 {
+  long cnt = 23456;
   lcd.fillScreen(BLACK);
-  font.setColors(RED,RGBto565(60,0,0));
-  int w=(SCR_HT-t-10)/4;
-  font.setSize1(w-3,w*2,t);
-  int y=(SCR_HT-w*2)/2;
+  digi.setColors(RED,RGBto565(40,0,0));
+  digi.setSpacing(2);
   ms=millis();
+  int x,y=30;
   while(millis()-ms<5000) {
-    font.drawDigit1(random(0,3),0*w,y);
-    font.drawDigit1(random(0,4),1*w,y);
-    font.drawDigit1(':',2*w+5-3,y);
-    font.drawDigit1(random(0,6),t+10-3+2*w,y);
-    font.drawDigit1(random(0,10),t+10-3+3*w,y);
-    delay(600);
+    snprintf(buf,19,"Style #7 s=%d",st);
+    lcd.setCursor(0,0);
+    lcd.print(buf);
+    snprintf(buf,6,"%05ld",cnt);
+    digi.setColors(GREEN,RGBto565(0,40,0));
+    digi.setSize7(64,140,13,st);
+    x=digi.printNumber7(buf+4,0,y);
+    digi.setColors(RGBto565(250,0,250),RGBto565(40,0,40));
+    digi.setSize7(44,78,9,st);
+    digi.printNumber7("6:45",x+10,y);
+    digi.setColors(RED,RGBto565(40,0,0));
+    digi.setSize7(30,50,5,st>2?2:st);
+    digi.printNumber7(buf,x+10,120);
+    delay(300);
+    cnt+=111;
   }
 }
 
-void demoClock2(int t)
+void misc_3()
 {
+  long cnt = 0;
   lcd.fillScreen(BLACK);
-  font.setColors(GREEN,RGBto565(0,40,0));
-  int w=(SCR_HT-t-10)/4;
-  font.setSize2(w-3,w*2,t);
-  int y=(SCR_HT-w*2)/2;
+  digi.setColors(GREEN,RGBto565(0,40,0));
+  digi.setSpacing(4);
   ms=millis();
+  int w=SCR_WD/3,h=140;
   while(millis()-ms<5000) {
-    font.drawDigit2(random(0,3),0*w,y);
-    font.drawDigit2(random(0,4),1*w,y);
-    font.drawDigit2(':',2*w+5-3,y);
-    font.drawDigit2(random(0,6),t+10-3+2*w,y);
-    font.drawDigit2(random(0,10),t+10-3+3*w,y);
-    delay(600);
+    for(int i=0;i<3;i++) { digi.setSize7(w-4,h,11,i+1); digi.drawDigit7(cnt,w*i,0); }
+    if(++cnt>9) cnt=0;
+    delay(400);
   }
 }
 
-void demoClock2c(int t)
+void misc_4_5()
+{
+  long cnt = 0;
+  lcd.fillScreen(BLACK);
+  digi.setColors(GREEN,RGBto565(0,40,0));
+  digi.setSpacing(4);
+  ms=millis();
+  int w=SCR_WD/4,h=80;
+  int w2=SCR_WD/5,h2=65;
+  while(millis()-ms<5000) {
+    //h=50; cnt=8;
+    for(int i=0;i<4;i++) { digi.setSize7(w-4,h,9,i); digi.drawDigit7(cnt,w*i,0); }
+    for(int i=0;i<5;i++) { digi.setSize7(w2-4,h2,7,i>2?2:i); digi.drawDigit7(cnt,w2*i,90); }
+    if(++cnt>9) cnt=0;
+    delay(400);
+  }
+}
+
+void demo()
 {
   lcd.fillScreen(BLACK);
-  font.setColors(CYAN,RGBto565(0,190,190),RGBto565(0,40,40));
-  int w=(SCR_HT-t-10)/4;
-  font.setSize2(w-3,w*2,t);
-  int y=(SCR_HT-w*2)/2;
-  ms=millis();
-  while(millis()-ms<5000) {
-    font.drawDigit2c(random(0,3),0*w,y);
-    font.drawDigit2c(random(0,4),1*w,y);
-    font.drawDigit2c(':',2*w+5-3,y);
-    font.drawDigit2c(random(0,6),t+10-3+2*w,y);
-    font.drawDigit2c(random(0,10),t+10-3+3*w,y);
-    delay(600);
+  digi.setColors(GREEN,RGBto565(0,40,0));
+  digi.setSpacing(4);
+  int w=SCR_WD/4,h=100;
+  lcd.setCursor((240-10*12)/2,0);
+  lcd.print("segThick=7");
+  for(int i=0;i<4;i++) {
+    digi.setSize7(w-4,h,9,i);
+    digi.drawDigit7(8,w*i,40);
+    snprintf(buf,19,"s=%d",i);
+    lcd.setCursor(w*i+10,20);
+    lcd.print(buf);
   }
+  delay(9000);
 }
 
 void loop() 
 {
-  demoClock1(10);
-  demoClock2(14);
-  demoClock2c(14);
-  demoClock2(10);
-  demoClock2c(10);
+  demo();
+  for(int i=0;i<=4;i++) style7(i);
+  misc_3();
+  misc_4_5();
 }
-
 

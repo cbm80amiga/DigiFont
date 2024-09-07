@@ -1,4 +1,4 @@
-// 7-segment and outline digit font rendering library
+// 7-segment and outline font rendering library
 // (c) 2020-24 by Pawel A. Hernik
 
 #include "DigiFont.h"
@@ -13,6 +13,7 @@ DigiFont::DigiFont(void (*_linehFun)(int x0,int x1, int y, int c),
   setColors(1,0);
   spacing = 1;
   clearBg = 1;
+  frWd = frHt = 0;
 }
 // ----------------------------------------------------------------
 // linehFun,_linevFun and rectFun callbacks are necessary to initialize the library
@@ -25,6 +26,12 @@ void DigiFont::init(void (*_linehFun)(int x0,int x1, int y, int c),
   rectFun  = _rectFun;
 }
 
+void DigiFont::setFrame(int wd, int ht)
+{
+  frWd = wd;
+  frHt = ht;
+}
+
 void DigiFont::setSize1(int wd, int ht, int th)
 {
   digWd = wd;
@@ -35,7 +42,7 @@ void DigiFont::setSize1(int wd, int ht, int th)
   //Serial.print(segWd); Serial.print("x"); Serial.println(segHt);
 }
 
-// segThick should be an odd value for the best look
+// segThick should be an odd value for the best appearance
 void DigiFont::setSize2(int wd, int ht, int th)
 {
   digWd = wd;
@@ -81,9 +88,9 @@ void DigiFont::setSizeO(int wd, int ht, int th)
 }
 
 // Style #7 can replace styles #1 and #2
-// segThick value should be an odd value for the best look
+// segThick value should be an odd value for the best appearance
 // segSt should be from 0 to int(segThick/2) for the best results
-// example for segThick=7 valid segSt is 0,1,2,3
+// for example for segThick=7 valid segSt is 0,1,2,3
 void DigiFont::setSize7(int wd, int ht, int th, int st)
 {
   digWd = wd;
@@ -354,15 +361,6 @@ int DigiFont::drawDigit3(int ch, int x, int y)
       ch=ch>='A'?ch-'A'+10:ch;
       s=digits[ch&0xf];
   }
-  /*  
-  drawSeg3(0,x+segThick,       y+0,                  s&B0000001);
-  drawSeg3(1,x+segThick+segWd, y+segThick,           s&B0000010);
-  drawSeg3(2,x+segThick+segWd, y+segThick*2+segHt,   s&B0000100);
-  drawSeg3(3,x+segThick,       y+(segThick+segHt)*2, s&B0001000);
-  drawSeg3(4,x+0,              y+segThick*2+segHt,   s&B0010000);
-  drawSeg3(5,x+0,              y+segThick,           s&B0100000);
-  drawSeg3(6,x+segThick,       y+segThick+segHt,     s&B1000000);
-  */
   drawSeg3(0,x+segThick+1,       y+0,                 s&0b0000001);
   drawSeg3(1,x+segThick+segWd+2, y+ofs,               s&0b0000010);
   drawSeg3(2,x+segThick+segWd+2, y+digHt-1-ofs-segHt, s&0b0000100);
@@ -393,62 +391,143 @@ int DigiFont::drawDigit7(int ch, int x, int y)
       ch=ch>='A'?ch-'A'+10:ch;
       s=digits[ch&0xf];
   }
-  drawSeg7(0,x+offs,           y,                  s&0b0000001);
-  drawSeg7(1,x+digWd-segThick, y+offs,          s&0b0000010);
-  drawSeg7(2,x+digWd-segThick, y+offs+segHt+1,  s&0b0000100);
+  drawSeg7(0,x+offs,           y,                 s&0b0000001);
+  drawSeg7(1,x+digWd-segThick, y+offs,            s&0b0000010);
+  drawSeg7(2,x+digWd-segThick, y+offs+segHt+1,    s&0b0000100);
   drawSeg7(3,x+offs,           y+segHt+segHt+offs-segThick+segSt+2,  s&0b0001000);
-  drawSeg7(4,x,                y+offs+segHt+1,        s&0b0010000);
-  drawSeg7(5,x,                y+offs,                s&0b0100000);
-  drawSeg7(6,x+offs,           y+segHt+offs,        s&0b1000000);
+  drawSeg7(4,x,                y+offs+segHt+1,    s&0b0010000);
+  drawSeg7(5,x,                y+offs,            s&0b0100000);
+  drawSeg7(6,x+offs,           y+segHt+offs,      s&0b1000000);
   return digWd; 
 }
 
-void DigiFont::clear45(int ch, int x, int y)
+void DigiFont::clearField(int ch, int x, int y)
 {
   int hc=(digHt-segThick*3)/2;
   switch(ch) {
+    case '.':
+      (*rectFun)(x,y,segThick,digHt-segThick,colOff); break;
+    case '\'':
+      (*rectFun)(x,y+segThick,segThick,digHt-segThick,colOff); break;
+    case ':':
+      (*rectFun)(x,y,segThick,(hc+segThick*2-segThick)/2,colOff);
+      (*rectFun)(x,y+(hc+segThick*2-segThick)/2+segThick,segThick,digHt-(digHt-hc-segThick-segThick)/2-segThick-((hc+segThick*2-segThick)/2+segThick),colOff);
+      (*rectFun)(x,y+digHt-(digHt-hc-segThick-segThick)/2,segThick,digHt-(digHt-(digHt-hc-segThick-segThick)/2),colOff);
+      break;
     case ' ':
-      (*rectFun)(x,y,   digWd,digHt,colOff);  break;
+      (*rectFun)(x,y,digWd-segThick,digHt,colOff);  break;
     case '-':
       (*rectFun)(x,y,               digWd,hc+segThick,colOff);
       (*rectFun)(x,y+hc+segThick*2, digWd,digHt-hc-segThick*2,colOff);
       break;
-    case 0:
+    case 'C':
+    case 'c':
+      (*rectFun)(x+segThick, y+segThick, digWd-segThick,digHt-segThick*2,colOff); break;
+    case '0':
+      (*rectFun)(x+segThick,y+segThick, digWd-segThick*2,digHt-segThick*2,colOff);
+      break;
+    case '1':
+      (*rectFun)(x,y, digWd-segThick,digHt,colOff);  break;
+    case '2':
+      (*rectFun)(x,          y+segThick,    digWd-segThick, hc,colOff);
+      (*rectFun)(x+segThick, y+hc+segThick*2, digWd-segThick, digHt-hc-segThick*3,colOff);
+      break;
+    case '3':
+      (*rectFun)(x, y+segThick,      digWd-segThick,hc,colOff);
+      (*rectFun)(x, y+hc+segThick,   digWd/3,segThick,colOff); // for 2/3 width
+      (*rectFun)(x, y+hc+segThick*2, digWd-segThick,digHt-hc-segThick*3,colOff);
+      break;
+    case '4':
+      (*rectFun)(x+segThick,  y,               digWd-segThick*2,hc+segThick,colOff);
+      (*rectFun)(x,           y+hc+segThick*2, digWd-segThick,digHt-hc-segThick*2,colOff);
+      break;
+    case '5':
+      (*rectFun)(x+segThick, y+segThick,      digWd-segThick, hc,colOff);
+      (*rectFun)(x,          y+hc+segThick*2, digWd-segThick, digHt-hc-segThick*3,colOff);
+      break;
+    case '6':
+      (*rectFun)(x+segThick, y+segThick,      digWd-segThick, hc,colOff);
+      (*rectFun)(x+segThick, y+hc+segThick*2, digWd-segThick*2, digHt-hc-segThick*3,colOff);
+      break;
+    case '7':
+      (*rectFun)(x,y+segThick, digWd-segThick,digHt-segThick,colOff);  break;
+      break;
+    case '8':
+      (*rectFun)(x+segThick, y+segThick,      digWd-segThick*2, hc,colOff);
+      (*rectFun)(x+segThick, y+hc+segThick*2, digWd-segThick*2, digHt-hc-segThick*3,colOff);
+      break;
+    case '9':
+      (*rectFun)(x+segThick, y+segThick,      digWd-segThick*2, hc,colOff);
+      (*rectFun)(x,          y+hc+segThick*2, digWd-segThick,   digHt-hc-segThick*3,colOff);
+      break;
+  }
+}
+
+void DigiFont::clearFO(int ch, int x, int y)
+{
+  int hc=(digHt-segThick*3)/2;
+  switch(ch) {
+    case '.':
+      (*rectFun)(x,y,segThick,digHt-segThick,colOff); break;
+    case '\'':
+      (*rectFun)(x,y+segThick,segThick,digHt-segThick,colOff); break;
+    case ':':
+      (*rectFun)(x,y,segThick,(hc+segThick*2-segThick)/2,colOff);
+      (*rectFun)(x,y+(hc+segThick*2-segThick)/2+segThick,segThick,digHt-(digHt-hc-segThick-segThick)/2-segThick-((hc+segThick*2-segThick)/2+segThick),colOff);
+      (*rectFun)(x,y+digHt-(digHt-hc-segThick-segThick)/2,segThick,digHt-(digHt-(digHt-hc-segThick-segThick)/2),colOff);
+      break;
+    case ' ':
+      (*rectFun)(x,               y,segThick,digHt,colOff);
+      (*rectFun)(x+digWd-segThick,y,segThick,digHt,colOff);
+      (*rectFun)(x+segThick,y,               digWd-segThick*2,segThick,colOff);
+      (*rectFun)(x+segThick,y+digHt-segThick,digWd-segThick*2,segThick,colOff);
+      (*rectFun)(x+segThick,y+hc+segThick,            digWd-segThick*2,segThick,colOff);
+    case '-':
+      (*rectFun)(x,y,               digWd,hc+segThick,colOff);
+      (*rectFun)(x,y+hc+segThick*2, digWd,digHt-hc-segThick*2,colOff);
+      break;
+    case 'C':
+    case 'c':
+      (*rectFun)(x+segThick,       y+hc+segThick,   digWd-segThick*2,segThick,colOff);
+      (*rectFun)(x+digWd-segThick, y+segThick,      segThick,        digHt-segThick*2, colOff);
+      break;
+    case '0':
       (*rectFun)(x+segThick,y+hc+segThick,   digWd-segThick*2,segThick,colOff);
       break;
-    case 1:
+    case '1':
       (*rectFun)(x,         y,               segThick,digHt,colOff);
       (*rectFun)(x+segThick,y,               digWd-segThick*2,segThick,colOff);
       (*rectFun)(x+segThick,y+hc+segThick,   digWd-segThick*2,segThick,colOff);
       (*rectFun)(x+segThick,y+digHt-segThick,digWd-segThick*2,segThick,colOff);
       break;
-    case 2:
+    case '2':
       (*rectFun)(x,               y+segThick,      segThick,hc,colOff);
       (*rectFun)(x+digWd-segThick,y+segThick*2+hc,segThick,digHt-hc-segThick*3,colOff);
       break;
-    case 3:
+    case '3':
       (*rectFun)(x,         y+segThick,      segThick,digHt-segThick*2,colOff);
+      (*rectFun)(x+segThick,y+hc+segThick,   digWd/3-segThick,segThick,colOff); // for 2/3 width
       break;
-    case 4:
+    case '4':
       (*rectFun)(x,         y+segThick*2+hc,  segThick,digHt-segThick*2-hc,colOff);
       (*rectFun)(x+segThick,y,                digWd-segThick*2,segThick,colOff);
       (*rectFun)(x+segThick,y+digHt-segThick, digWd-segThick*2,segThick,colOff);
       break;
-    case 5:
+    case '5':
       (*rectFun)(x+digWd-segThick,y+segThick,     segThick,hc,colOff);
       (*rectFun)(x,               y+segThick*2+hc,segThick,digHt-hc-segThick*3,colOff);
       break;
-    case 6:
+    case '6':
       (*rectFun)(x+digWd-segThick,y+segThick,       segThick,hc,colOff);
       break;
-    case 7:
+    case '7':
       (*rectFun)(x,         y+segThick,      segThick,digHt-segThick,colOff);
       (*rectFun)(x+segThick,y+hc+segThick,   digWd-segThick*2,segThick,colOff);
       (*rectFun)(x+segThick,y+digHt-segThick,digWd-segThick*2,segThick,colOff);
       break;
-    case 8:
+    case '8':
       break;
-    case 9:
+    case '9':
       (*rectFun)(x,               y+hc+segThick*2,segThick,digHt-hc-segThick*3,colOff);
       break;
   }
@@ -457,39 +536,45 @@ void DigiFont::clear45(int ch, int x, int y)
 int DigiFont::drawDigitF(int ch, int x, int y)
 {
   int hc=(digHt-segThick*3)/2;
-  ch = ch>='0' && ch<='9' ? ch-'0' : ch;
-  if(clearBg) clear45(ch,x,y);
   switch(ch) {
     case '.':
       (*rectFun)(x,y+digHt-segThick,segThick,segThick,colOn); return segThick;
     case '\'':
       (*rectFun)(x,y,segThick,segThick,colOn); return segThick;
     case ':':
-      (*rectFun)(x,y+(digHt/2-segThick)/2+2,segThick,segThick,colOn);
-      (*rectFun)(x,y+digHt-1-(digHt/2-segThick)/2-segThick-1,segThick,segThick,colOn);
+      //(*rectFun)(x,y+digHt-digHt/2-segThick*2,segThick,segThick,colOn);
+      //(*rectFun)(x,y+digHt-digHt/2+segThick*1,segThick,segThick,colOn);
+      (*rectFun)(x,y+(hc+segThick*2-segThick)/2,segThick,segThick,colOn); // middle of top part
+      (*rectFun)(x,y+digHt-(digHt-hc-segThick-segThick)/2-segThick,segThick,segThick,colOn);  // middle of bottom part
       return segThick;
     case ' ':
       break;
     case '-':
       (*rectFun)(x,y+hc+segThick,   digWd,segThick,colOn);
       break;
-    case 0:
+    case 'C':
+    case 'c':
+      (*rectFun)(x,          y,      segThick,digHt, colOn);
+      (*rectFun)(x+segThick, y,digWd-segThick,segThick, colOn);
+      (*rectFun)(x+segThick, y+digHt-segThick,digWd-segThick,segThick,colOn);
+      break;
+    case '0':
       (*rectFun)(x,               y,segThick,digHt,colOn);
       (*rectFun)(x+digWd-segThick,y,segThick,digHt,colOn);
       (*rectFun)(x+segThick,y,               digWd-segThick*2,segThick,colOn);
       (*rectFun)(x+segThick,y+digHt-segThick,digWd-segThick*2,segThick,colOn);
       break;
-    case 1:
+    case '1':
       (*rectFun)(x+digWd-segThick,y,segThick,digHt,colOn);
       break;
-    case 2:
+    case '2':
       (*rectFun)(x,y,               digWd,segThick,colOn);
       (*rectFun)(x,y+hc+segThick,   digWd,segThick,colOn);
       (*rectFun)(x,y+digHt-segThick,digWd,segThick,colOn);
       (*rectFun)(x,               y+segThick*2+hc,segThick,digHt-hc-segThick*3,colOn);
       (*rectFun)(x+digWd-segThick,y+segThick,     segThick,hc,colOn);
       break;
-    case 3:
+    case '3':
       (*rectFun)(x,y,               digWd-segThick,segThick,colOn);
       //(*rectFun)(x+segThick,y+hc+segThick,   digWd-segThick*1,segThick,colOn);
       //(*rectFun)(x,y+hc+segThick,   digWd-segThick,segThick,colOn); // full width
@@ -497,7 +582,7 @@ int DigiFont::drawDigitF(int ch, int x, int y)
       (*rectFun)(x,y+digHt-segThick,digWd-segThick,segThick,colOn);
       (*rectFun)(x+digWd-segThick,y,         segThick,digHt,colOn);
       break;
-    case 4:
+    case '4':
       (*rectFun)(x+digWd-segThick,y,             segThick,digHt,colOn);
       (*rectFun)(x,               y,             segThick,hc+segThick*2,colOn);
       (*rectFun)(x+segThick,      y+hc+segThick, digWd-segThick*2,segThick,colOn);
@@ -505,32 +590,32 @@ int DigiFont::drawDigitF(int ch, int x, int y)
       //(*rectFun)(x,y,         segThick,hc+segThick*3,colOn);
       //(*rectFun)(x+segThick,y+hc+segThick*2,   digWd-segThick*2,segThick,colOn);
       break;
-    case 5:
+    case '5':
       (*rectFun)(x,y,               digWd,segThick,colOn);
       (*rectFun)(x,y+hc+segThick,   digWd,segThick,colOn);
       (*rectFun)(x,y+digHt-segThick,digWd,segThick,colOn);
       (*rectFun)(x,               y+segThick,     segThick,hc,colOn);
       (*rectFun)(x+digWd-segThick,y+segThick*2+hc,segThick,digHt-hc-segThick*3,colOn);
       break;
-    case 6:
+    case '6':
       (*rectFun)(x,y,                      digWd,segThick,colOn);
       (*rectFun)(x+segThick,y+hc+segThick, digWd-segThick,segThick,colOn);
       (*rectFun)(x,y+digHt-segThick,       digWd,segThick,colOn);
       (*rectFun)(x,               y+segThick,       segThick,digHt-segThick*2,colOn);
       (*rectFun)(x+digWd-segThick,y+hc+segThick*2,  segThick,digHt-hc-segThick*3,colOn);
       break;
-    case 7:
+    case '7':
       (*rectFun)(x+digWd-segThick,y,segThick,      digHt,colOn);
       (*rectFun)(x,               y,digWd-segThick,segThick,colOn);
       break;
-    case 8:
+    case '8':
       (*rectFun)(x,               y,segThick,digHt,colOn);
       (*rectFun)(x+digWd-segThick,y,segThick,digHt,colOn);
       (*rectFun)(x+segThick,y,               digWd-segThick*2,segThick,colOn);
       (*rectFun)(x+segThick,y+digHt-segThick,digWd-segThick*2,segThick,colOn);
       (*rectFun)(x+segThick,y+hc+segThick,            digWd-segThick*2,segThick,colOn);
       break;
-    case 9:
+    case '9':
       (*rectFun)(x,               y,                segThick,hc+segThick*2,colOn);
       (*rectFun)(x+digWd-segThick,y,                segThick,digHt,colOn);
       (*rectFun)(x+segThick,      y,                digWd-segThick*2,segThick,colOn);
@@ -543,8 +628,8 @@ int DigiFont::drawDigitF(int ch, int x, int y)
 
 void DigiFont::rect(int x, int y, int w, int h, int col)
 {
-  (*linehFun)(x, x+w-1, y+h-1,col);
-  (*linehFun)(x, x+w-1, y,    col);
+  (*linehFun)(x,  x+w-1, y+h-1,col);
+  (*linehFun)(x,  x+w-1, y,    col);
   (*linevFun)(x,    y+1, y+h-2,col);
   (*linevFun)(x+w-1,y+1, y+h-2,col);
 }
@@ -552,17 +637,17 @@ void DigiFont::rect(int x, int y, int w, int h, int col)
 int DigiFont::drawDigitO(int ch, int x, int y)
 {
   int hc=(digHt-segThick*3)/2;
-  ch = ch>='0' && ch<='9' ? ch-'0' : ch;
   if(clearBg) {
-    clear45(ch,x,y);
-    // cleaning up leftover after previous digits
+    clearFO(ch,x,y);
+    // cleaning up leftover after previous digits - should it be avoided in case of [.:] ?
     (*rectFun)(x+1,y+1, segThick-1,segThick-1,colOff);
     (*rectFun)(x+digWd-segThick,y+1, segThick-1,segThick-1,colOff);
     (*rectFun)(x+digWd-segThick,y+digHt-segThick, segThick-1,segThick-1,colOff);
     (*rectFun)(x+digWd-segThick,y+hc+segThick, segThick-1,segThick,colOff);
     (*rectFun)(x+1,y+hc+segThick, segThick-1,segThick,colOff);
     (*rectFun)(x+1,y+digHt-segThick, segThick-1,segThick-1,colOff);
-    (*linevFun)(x+segThick, y+segThick+hc+1,    y+segThick+hc+1+segThick-2, colOff); // le-mid-short '3'
+    //(*linevFun)(x+segThick, y+segThick+hc+1,    y+segThick+hc+1+segThick-2, colOff); // le-mid-short '3'
+    (*linevFun)(x+digWd/3-1, y+segThick+hc+1,    y+segThick+hc+1+segThick-2, colOff); // le-mid-short '3'
     (*linehFun)(x+1,x+segThick-1, y+digHt-segThick, colOff); // bot-left
   }
   switch(ch) {
@@ -571,22 +656,35 @@ int DigiFont::drawDigitO(int ch, int x, int y)
     case '\'':
       rect(x,y,segThick,segThick,colOn); return segThick;
     case ':':
-      rect(x,y+(digHt/2-segThick)/2+2,segThick,segThick,colOn);
-      rect(x,y+digHt-1-(digHt/2-segThick)/2-segThick-1,segThick,segThick,colOn);
+      //rect(x,y+(digHt/2-segThick)/2+2,segThick,segThick,colOn);
+      //rect(x,y+digHt-1-(digHt/2-segThick)/2-segThick-1,segThick,segThick,colOn);
+      rect(x,y+(hc+segThick*2-segThick)/2,segThick,segThick,colOn); // middle of top part
+      rect(x,y+digHt-(digHt-hc-segThick-segThick)/2-segThick,segThick,segThick,colOn);  // middle of bottom part
       return segThick;
     case ' ':
       break;
     case '-':
       rect(x,y+hc+segThick,   digWd,segThick,colOn);
       break;
-    case 0:
+    case 'C':
+    case 'c':
+      (*linehFun)(x,            x+digWd-1,          y,    colOn); // top
+      (*linehFun)(x,            x+digWd-1,          y+digHt-1,  colOn); // bottom
+      (*linevFun)(x,            y+1,                y+digHt-2, colOn);  // left
+      (*linevFun)(x+digWd-1,    y+1,                y+segThick-2, colOn);  // short top
+      (*linevFun)(x+digWd-1,    y+digHt-segThick+1, y+digHt-1, colOn);  // short bottom
+      (*linevFun)(x+segThick-1, y+segThick,         y+digHt-segThick-1, colOn);  // inside
+      (*linehFun)(x+segThick-1, x+digWd-1,          y+segThick-1,  colOn); // top
+      (*linehFun)(x+segThick-1, x+digWd-1,          y+digHt-segThick,  colOn); // bottom
+      break;
+    case '0':
       rect(x,y,digWd,digHt,colOn);
       rect(x+segThick-1,y+segThick-1,digWd-segThick*2+2,digHt-segThick*2+2,colOn);
       break;
-    case 1:
+    case '1':
       rect(x+digWd-segThick,y,segThick,digHt,colOn);
       break;
-    case 2:
+    case '2':
       (*linehFun)(x,          x+digWd-1,        y,  colOn); // top
       (*linehFun)(x,          x+digWd-segThick, y+segThick-1,  colOn); // top2
       (*linehFun)(x,          x+digWd-1,        y+digHt-1,  colOn); // bottom
@@ -600,7 +698,7 @@ int DigiFont::drawDigitO(int ch, int x, int y)
       (*linevFun)(x,                y+1,                y+segThick-2, colOn); // le short
       (*linevFun)(x+digWd-1,        y+digHt-segThick+1, y+digHt-2, colOn); // rt short
       break;
-    case 3:
+    case '3':
       (*linehFun)(x,          x+digWd-1,        y,  colOn); // top
       (*linehFun)(x,          x+digWd-1,        y+digHt-1,  colOn); // bottom
       (*linehFun)(x,          x+digWd-segThick, y+segThick-1,  colOn); // top2
@@ -620,7 +718,7 @@ int DigiFont::drawDigitO(int ch, int x, int y)
       (*linevFun)(x+digWd-segThick,  y+segThick,           y+segThick+1+hc-1, colOn); //le-top
       (*linevFun)(x+digWd-segThick,  y+segThick*2+hc,      y+segThick*2+hc+1+hc-1, colOn); //le-bot
       break;
-    case 4:
+    case '4':
       (*linehFun)(x,                  x+segThick-1,     y, colOn); // top short1
       (*linehFun)(x+digWd-segThick,   x+digWd-1,        y, colOn); // top short2
       (*linehFun)(x+digWd-segThick,   x+digWd-1,        y+digHt-1,  colOn); // bottom short
@@ -632,7 +730,7 @@ int DigiFont::drawDigitO(int ch, int x, int y)
       (*linevFun)(x,                 y+1,             y+segThick*2+hc-1, colOn); //le-le
       (*linevFun)(x+segThick-1,      y+1,             y+segThick+hc, colOn); //le-rt
       break;
-    case 5:
+    case '5':
       (*linehFun)(x,          x+digWd-1,        y,  colOn); // top
       (*linehFun)(x+segThick, x+digWd-1,        y+segThick-1,  colOn); // top2
       (*linehFun)(x,          x+digWd-1,        y+digHt-1,  colOn); // bottom
@@ -646,7 +744,7 @@ int DigiFont::drawDigitO(int ch, int x, int y)
       (*linevFun)(x+digWd-1,        y+1,             y+segThick-2, colOn); // rt short
       (*linevFun)(x,                y+digHt-segThick+1, y+digHt-2, colOn); // le short
       break;
-    case 6:
+    case '6':
       rect(x+segThick-1,y+hc+segThick*2-1,digWd-segThick*2+2,digHt-hc-segThick*3+2,colOn);
       (*linehFun)(x,          x+digWd-1, y,  colOn); // top
       (*linehFun)(x+segThick, x+digWd-1, y+segThick-1,  colOn); // top2
@@ -657,7 +755,7 @@ int DigiFont::drawDigitO(int ch, int x, int y)
       (*linevFun)(x+digWd-1,    y+hc+segThick+1, y+digHt-2, colOn); // rt
       (*linevFun)(x+digWd-1,    y+1, y+segThick-2, colOn); // rt short
       break;
-    case 7:
+    case '7':
       (*linehFun)(x,                x+digWd-1,          y,  colOn); // top
       (*linehFun)(x+digWd-segThick, x+digWd-1,          y+digHt-1,  colOn); // bottom
       (*linehFun)(x,                x+digWd-1-segThick, y+segThick-1,  colOn); // bottom2
@@ -665,12 +763,12 @@ int DigiFont::drawDigitO(int ch, int x, int y)
       (*linevFun)(x,                y+1,                y+segThick-2, colOn);  // le-short
       (*linevFun)(x+digWd-segThick, y+segThick-1,       y+digHt-1, colOn); // rt-le-long
       break;
-    case 8:
+    case '8':
       rect(x,y,digWd,digHt,colOn);
       rect(x+segThick-1,y+segThick-1,     digWd-segThick*2+2,hc+2,colOn);
       rect(x+segThick-1,y+hc+segThick*2-1,digWd-segThick*2+2,digHt-hc-segThick*3+2,colOn);
       break;
-    case 9:
+    case '9':
       rect(x+segThick-1,y+segThick-1, digWd-segThick*2+2,hc+2,colOn);
       (*linehFun)(x, x+digWd-1, y, colOn); // top
       (*linehFun)(x, x+digWd-1, y+digHt-1, colOn); // bot
@@ -711,7 +809,25 @@ int DigiFont::printNumber3(char *txt, int x, int y)
 
 int DigiFont::printNumberF(char *txt, int x, int y)
 {
-  while(*txt) x+=drawDigitF(*txt++,x,y)+spacing;
+  while(*txt) {
+    if(clearBg) clearFO(*txt,x,y);
+    x+=drawDigitF(*txt++,x,y)+spacing;
+  }
+  return x-spacing;
+}
+
+int DigiFont::printNumberFr(char *txt, int x, int y)
+{
+  int xf=x-frWd;
+  while(*txt) {
+    clearField(*txt,x,y);
+    x+=drawDigitF(*txt++,x,y)+spacing;
+    if(*txt) (*rectFun)(x-spacing,y, spacing,digHt,colOff);
+  }
+  (*rectFun)(xf,y-frHt,  x-spacing+frWd-xf,frHt,colOff);
+  (*rectFun)(xf,y+digHt, x-spacing+frWd-xf,frHt,colOff);
+  (*rectFun)(xf,y, frWd,digHt,colOff);
+  (*rectFun)(x-spacing,y, frWd,digHt,colOff);
   return x-spacing;
 }
 
@@ -727,7 +843,7 @@ int DigiFont::printNumber7(char *txt, int x, int y)
   return x-spacing;
 }
 
-int DigiFont::numberWidth(char *txt)
+int DigiFont::getNumberWidth(char *txt)
 {
   int wd=0;
   while(*txt) { wd+=((*txt=='.' || *txt==':' || *txt=='\'')?segThick:digWd)+spacing; txt++; }
