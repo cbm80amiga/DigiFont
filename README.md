@@ -3,6 +3,9 @@
 # DigiFont
 Library for nice, scalable digits rendering using any Arduino GFX libraries 
 
+<img src="images/allstyles.jpg" title="allstyles" />
+<img src="images/style7.jpg" title="style7" />
+
 YouTube videos:
 
 https://youtu.be/X6PjfhcNE98

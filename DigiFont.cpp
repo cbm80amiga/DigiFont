@@ -467,6 +467,7 @@ void DigiFont::clearFO(int ch, int x, int y)
 {
   int hc=(digHt-segThick*3)/2;
   switch(ch) {
+    /*
     case '.':
       (*rectFun)(x,y,segThick,digHt-segThick,colOff); break;
     case '\'':
@@ -476,6 +477,7 @@ void DigiFont::clearFO(int ch, int x, int y)
       (*rectFun)(x,y+(hc+segThick*2-segThick)/2+segThick,segThick,digHt-(digHt-hc-segThick-segThick)/2-segThick-((hc+segThick*2-segThick)/2+segThick),colOff);
       (*rectFun)(x,y+digHt-(digHt-hc-segThick-segThick)/2,segThick,digHt-(digHt-(digHt-hc-segThick-segThick)/2),colOff);
       break;
+    */
     case ' ':
       (*rectFun)(x,               y,segThick,digHt,colOff);
       (*rectFun)(x+digWd-segThick,y,segThick,digHt,colOff);
