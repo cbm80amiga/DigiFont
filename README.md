@@ -46,7 +46,7 @@ https://youtu.be/Z_YCfJZn_bA
 |style 2c|1714|2-color version for pseudo 3D appearance|<img src="images/st2c.jpg" title="style2c" />|
 |style 3|1270|simple rectangle segments for low memory applications|<img src="images/st3.jpg" title="style3" />|
 |style F/4|3378|filled|<img src="images/st4.jpg" title="style4" />|
-|style Fr|3570|filled|<img src="images/stFr.jpg" title="styleFr" />|
+|style Fr|3570|filled, with a frame around|<img src="images/stFr.jpg" title="styleFr" />|
 |style O/5|5924|outline|<img src="images/st5.jpg" title="style5" />|
 |style 7|1870|versatile replacement for style 1 and 2/2c|<img src="images/st7.jpg" title="style7" />|
 
