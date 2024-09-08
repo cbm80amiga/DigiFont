@@ -1,7 +1,8 @@
 [![license-badge][]][license] ![version]  ![hit-count] [![github-issues][]][issues]
 
 # DigiFont
-Library for a nice, scalable 7-segment digits rendered using any Arduino GFX libraries 
+
+A library for nice, scalable rendering of 7-segment digits using any Arduino GFX library.
 
 |All Styles|Style7 Variations|
 |--|--|
@@ -20,29 +21,29 @@ https://youtu.be/Z_YCfJZn_bA
 - each number can have different width, height and segment thickness
 - should work with any Arduino graphic library with user defined callbacks for drawLine() and fillRect()
 - 3 styles of 7-segment font variation
-- extra pseudo 3D look for color displays (style 2c)
+- additional pseudo 3D look for color displays (style 2c)
 - simple fast rectangular and outline styles
-- each digit only cleans the necessary segments, so cleaning and refreshing the entire screen is not necessary (important for good performance on high definition LCD displays)
-- examples for monochrome HX1230 and color ST7789 IPS
+- each digit clears the necessary segments only, so clearing and refreshing the entire screen is not necessary (important for good performance on high-resolution LCD displays)
+- examples for monochrome HX1230, ST7567 and color ST7789 IPS
 - each style has separate methods/functions to save program memory
 - if necessary only 3-4 functions can be used separately (setSize,drawSeg,drawDigit,printNumber) without the library
-- special look - multi layer rendering is possible: https://youtu.be/OPq9aBJP-pc
-- new 7-segment style #7 where look of segment can be defined using extra parameter (can replace styles #1 and #2)
+- special look with multi-layer rendering is possible: https://youtu.be/OPq9aBJP-pc
+- new 7-segment style #7, int which the appearance of the segment can be defined using an additional parameter (can replace styles #1 and #2)
 
 ## Last changes
 - styles 1 and 2/2c are now obsolete, use them only if you need lower memory usage, use style 7 instead
 - style 7 supports now 2 colors similar to style 2c
 - setSize7(50,100,13,6) is equivalent for setSize2(50,100,13)
-- setSize7(50,100,13,0) is equivalent for setSize1(50,100,13) but setSize7(50,100,13,2) gives nicer look
+- setSize7(50,100,13,0) is equivalent for setSize1(50,100,13) but setSize7(50,100,13,2) gives better appearance
 - style 4 and 5 are renamed to F (filled) and O (outline) but old names left for compatibility
-- new feature: setFrame(),printNumberFr() used for rendering simple non-flickering number on ony background with frame around
+- new feature: setFrame(),printNumberFr() to render simple non-flickering numbers on ony background with a frame around it
 
 ## Program memory usage and examples
 |Style|Usage|Info|Example|
 |--|--|--|--|
 |style 1|1650|7-segment style #1|<img src="images/st1.jpg" title="style1" />|
 |style 2|1452|7-segment style #2|<img src="images/st2.jpg" title="style2" />|
-|style 2c|1714|2 color version for pseudo 3D look|<img src="images/st2c.jpg" title="style2c" />|
+|style 2c|1714|2-color version for pseudo 3D appearance|<img src="images/st2c.jpg" title="style2c" />|
 |style 3|1270|simple rectangle segments for low memory applications|<img src="images/st3.jpg" title="style3" />|
 |style F/4|3378|filled|<img src="images/st4.jpg" title="style4" />|
 |style Fr|3570|filled|<img src="images/stFr.jpg" title="styleFr" />|
