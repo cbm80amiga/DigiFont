@@ -13,7 +13,7 @@ DigiFont::DigiFont(void (*_linehFun)(int x0,int x1, int y, int c),
   setColors(1,0);
   spacing = 1;
   clearBg = 1;
-  frWd = frHt = 0;
+  frWd = frHt = 4;
 }
 // ----------------------------------------------------------------
 // linehFun,_linevFun and rectFun callbacks are necessary to initialize the library
@@ -822,14 +822,16 @@ int DigiFont::printNumberFr(char *txt, int x, int y)
 {
   int xf=x-frWd;
   while(*txt) {
-    clearField(*txt,x,y);
+    if(clearBg) clearField(*txt,x,y);
     x+=drawDigitF(*txt++,x,y)+spacing;
-    if(*txt) (*rectFun)(x-spacing,y, spacing,digHt,colOff);
+    if(*txt && clearBg) (*rectFun)(x-spacing,y, spacing,digHt,colOff);
   }
-  (*rectFun)(xf,y-frHt,  x-spacing+frWd-xf,frHt,colOff);
-  (*rectFun)(xf,y+digHt, x-spacing+frWd-xf,frHt,colOff);
-  (*rectFun)(xf,y, frWd,digHt,colOff);
-  (*rectFun)(x-spacing,y, frWd,digHt,colOff);
+  if(clearBg) {
+    (*rectFun)(xf,y-frHt,  x-spacing+frWd-xf,frHt,colOff);
+    (*rectFun)(xf,y+digHt, x-spacing+frWd-xf,frHt,colOff);
+    (*rectFun)(xf,y, frWd,digHt,colOff);
+    (*rectFun)(x-spacing,y, frWd,digHt,colOff);
+  }
   return x-spacing;
 }
 

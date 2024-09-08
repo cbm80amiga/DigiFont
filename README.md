@@ -40,13 +40,14 @@ https://youtu.be/Z_YCfJZn_bA
 ## Program memory usage and examples
 |Style|Usage|Info|Example|
 |--|--|--|--|
-|style 1|1576|7-segment style #1|<img src="images/st1.jpg" title="style1" />|
-|style 2|1398|7-segment style #2|<img src="images/st2.jpg" title="style2" />|
-|style 2c|1628|2 color version for pseudo 3D look|<img src="images/st2c.jpg" title="style2c" />|
-|style 3|1228|simple rectangle segments for low memory applications|<img src="images/st3.jpg" title="style3" />|
-|style 4/F|3060|filled|<img src="images/st4.jpg" title="style4" />|
-|style 5/O|5266|outline|<img src="images/st5.jpg" title="style5" />|
-|style 7|1838|versatile replacement for style 1 and 2/2c|<img src="images/st7.jpg" title="style7" />|
+|style 1|1650|7-segment style #1|<img src="images/st1.jpg" title="style1" />|
+|style 2|1452|7-segment style #2|<img src="images/st2.jpg" title="style2" />|
+|style 2c|1714|2 color version for pseudo 3D look|<img src="images/st2c.jpg" title="style2c" />|
+|style 3|1270|simple rectangle segments for low memory applications|<img src="images/st3.jpg" title="style3" />|
+|style F/4|3378|filled|<img src="images/st4.jpg" title="style4" />|
+|style Fr|3570|filled|<img src="images/stFr.jpg" title="styleFr" />|
+|style O/5|5924|outline|<img src="images/st5.jpg" title="style5" />|
+|style 7|1870|versatile replacement for style 1 and 2/2c|<img src="images/st7.jpg" title="style7" />|
 
 If you find it useful and want to buy me a coffee or a beer:
 
