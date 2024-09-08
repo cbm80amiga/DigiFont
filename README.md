@@ -1,10 +1,11 @@
 [![license-badge][]][license] ![version]  ![hit-count] [![github-issues][]][issues]
 
 # DigiFont
-Library for nice, scalable digits rendering using any Arduino GFX libraries 
+Library for a nice, scalable 7-segment digits rendered using any Arduino GFX libraries 
 
-<img src="images/allstyles.jpg" title="allstyles" />
-<img src="images/style7.jpg" title="style7" />
+|All Styles|Style7 Variations|
+|--|--|
+|<img src="images/allstyles.jpg" title="allstyles" height="400" /> |<img src="images/style7.jpg" title="style7" height="400" />|
 
 YouTube videos:
 
@@ -34,6 +35,7 @@ https://youtu.be/Z_YCfJZn_bA
 - setSize7(50,100,13,6) is equivalent for setSize2(50,100,13)
 - setSize7(50,100,13,0) is equivalent for setSize1(50,100,13) but setSize7(50,100,13,2) gives nicer look
 - style 4 and 5 are renamed to F (filled) and O (outline) but old names left for compatibility
+- new feature: setFrame(),printNumberFr() used for rendering simple non-flickering number on ony background with frame around
 
 ## Program memory usage and examples
 |Style|Usage|Info|Example|
