@@ -2,7 +2,7 @@
 
 # DigiFont
 
-A library for nice, scalable rendering of 7-segment digits using any Arduino GFX library.
+A library that allows to render nice, scalable 7-segment digits using the Arduino GFX library.
 
 |All Styles|Style7 Variations|
 |--|--|
