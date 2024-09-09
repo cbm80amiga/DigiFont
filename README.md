@@ -36,7 +36,7 @@ https://youtu.be/Z_YCfJZn_bA
 - setSize7(50,100,13,6) is equivalent for setSize2(50,100,13)
 - setSize7(50,100,13,0) is equivalent for setSize1(50,100,13) but setSize7(50,100,13,2) gives better appearance
 - style 4 and 5 are renamed to F (filled) and O (outline) but old names left for compatibility
-- new feature: setFrame(),printNumberFr() to render simple non-flickering numbers on ony background with a frame around it
+- new feature: setFrame(),printNumberFr() to render simple non-flickering numbers on any background with a frame around it
 
 ## Program memory usage and examples
 |Style|Usage|Info|Example|
